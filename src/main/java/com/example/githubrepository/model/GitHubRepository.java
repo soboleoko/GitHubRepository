@@ -43,4 +43,14 @@ public class GitHubRepository {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    public void updateData(UpdateGitHubRepository updateGitHubRepository) {
+        this.setFullName(updateGitHubRepository.getFullName());
+        this.setDescription(updateGitHubRepository.getDescription());
+        this.setCloneUrl(updateGitHubRepository.getCloneUrl());
+        this.setStars(updateGitHubRepository.getStars());
+        this.setCreatedAt(updateGitHubRepository.getCreatedAt());
+        this.setOwner(updateGitHubRepository.getOwner());
+        this.setRepositoryName(updateGitHubRepository.getRepositoryName());
+    }
 }

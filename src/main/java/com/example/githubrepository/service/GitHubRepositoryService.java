@@ -46,13 +46,7 @@ public class GitHubRepositoryService {
                 .findGitHubRepositoryByOwnerAndRepositoryName(owner, repositoryName)
                 .orElseThrow(() -> new GitHubRepositoryNotFoundException("Nie znaleziono repozytorium o podanej nazwie lub jego autora",
                         HttpStatus.NOT_FOUND));
-        gitHubRepositoryByOwnerAndRepositoryName.setFullName(updateGitHubRepository.getFullName());
-        gitHubRepositoryByOwnerAndRepositoryName.setDescription(updateGitHubRepository.getDescription());
-        gitHubRepositoryByOwnerAndRepositoryName.setCloneUrl(updateGitHubRepository.getCloneUrl());
-        gitHubRepositoryByOwnerAndRepositoryName.setStars(updateGitHubRepository.getStars());
-        gitHubRepositoryByOwnerAndRepositoryName.setCreatedAt(updateGitHubRepository.getCreatedAt());
-        gitHubRepositoryByOwnerAndRepositoryName.setOwner(updateGitHubRepository.getOwner());
-        gitHubRepositoryByOwnerAndRepositoryName.setRepositoryName(updateGitHubRepository.getRepositoryName());
+        gitHubRepositoryByOwnerAndRepositoryName.updateData(updateGitHubRepository);
         return gitHubRepositoryMapper.mapToGitHubRepositoryDTO(gitHubRepositoryByOwnerAndRepositoryName);
     }
 
