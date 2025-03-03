@@ -35,7 +35,7 @@ public class GitHubRepositoryService {
 
     public GitHubRepositoryDTO getLocalGitHubRepository(String owner, String repositoryName) {
         GitHubRepository gitHubRepository = gitHubReposRepository.findGitHubRepositoryByOwnerAndRepositoryName(owner, repositoryName)
-                .orElseThrow(() -> new GitHubRepositoryNotFoundException("Nie znaleziono repozytorium o podanej nazwie lub jego autora",
+                .orElseThrow(() -> new GitHubRepositoryNotFoundException("The repository with such provided author or name does not exist",
                         HttpStatus.NOT_FOUND));
         return gitHubRepositoryMapper.mapToGitHubRepositoryDTO(gitHubRepository);
     }
@@ -44,7 +44,7 @@ public class GitHubRepositoryService {
     public GitHubRepositoryDTO updateLocalGitHubRepository(String owner, String repositoryName, UpdateGitHubRepository updateGitHubRepository) {
         GitHubRepository gitHubRepositoryByOwnerAndRepositoryName = gitHubReposRepository
                 .findGitHubRepositoryByOwnerAndRepositoryName(owner, repositoryName)
-                .orElseThrow(() -> new GitHubRepositoryNotFoundException("Nie znaleziono repozytorium o podanej nazwie lub jego autora",
+                .orElseThrow(() -> new GitHubRepositoryNotFoundException("The repository with such provided author or name does not exist",
                         HttpStatus.NOT_FOUND));
         gitHubRepositoryByOwnerAndRepositoryName.updateData(updateGitHubRepository);
         return gitHubRepositoryMapper.mapToGitHubRepositoryDTO(gitHubRepositoryByOwnerAndRepositoryName);
@@ -54,7 +54,7 @@ public class GitHubRepositoryService {
     public void deleteLocalGitHubRepository(String owner, String repositoryName) {
         GitHubRepository gitHubRepositoryByOwnerAndRepositoryName = gitHubReposRepository
                 .findGitHubRepositoryByOwnerAndRepositoryName(owner, repositoryName)
-                .orElseThrow(() -> new GitHubRepositoryNotFoundException("Nie znaleziono repozytorium o podanej nazwie lub jego autora",
+                .orElseThrow(() -> new GitHubRepositoryNotFoundException("The repository with such provided author or name does not exist",
                         HttpStatus.NOT_FOUND));
         gitHubReposRepository.delete(gitHubRepositoryByOwnerAndRepositoryName);
     }
