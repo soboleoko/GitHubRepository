@@ -6,20 +6,15 @@ import feign.codec.ErrorDecoder;
 import org.springframework.http.HttpStatus;
 
 public class CustomErrorDecoder implements ErrorDecoder {
+    private ErrorDecoder errorDecoder = new ErrorDecoder.Default();
+
     @Override
-    public Exception decode(String s, Response response) {
+    public Exception decode(String methodKey, Response response) {
         switch (response.status()) {
-            case 200:
-                return new GitHubRepositoryOK("Successful Repository operation", HttpStatus.OK);
-            case 201:
-                return new GitHubRepositoryCreated("Repository has been created", HttpStatus.CREATED);
-            case 204:
-                return new GitHubRepositoryNoContent("No body", HttpStatus.NO_CONTENT);
-            case 403:
-                return new GitHubRepositoryForbidden("Logged user has no access" , HttpStatus.FORBIDDEN);
             case 404:
                 return new GitHubRepositoryNotFoundException("The repository with such provided author or name does not exist", HttpStatus.NOT_FOUND);
-            default: return new Exception("Generic error");
+            default:
+                return errorDecoder.decode(methodKey, response);
         }
     }
 }
