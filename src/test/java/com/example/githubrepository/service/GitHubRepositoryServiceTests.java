@@ -107,7 +107,7 @@ public class GitHubRepositoryServiceTests {
         //when
         GitHubRepositoryNotFoundException result = Assertions.assertThrows(GitHubRepositoryNotFoundException.class, () -> gitHubRepositoryService.getLocalGitHubRepository(owner, repositoryName));
         //then
-        Assertions.assertEquals("Nie znaleziono repozytorium o podanej nazwie lub jego autora", result.getMessage());
+        Assertions.assertEquals("The repository with such provided author or name does not exist", result.getMessage());
         Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());
     }
 
@@ -145,7 +145,7 @@ public class GitHubRepositoryServiceTests {
         //when
         GitHubRepositoryNotFoundException result = Assertions.assertThrows(GitHubRepositoryNotFoundException.class, () -> gitHubRepositoryService.updateLocalGitHubRepository(owner, repositoryName, updateGitHubRepository));
         //then
-        Assertions.assertEquals("Nie znaleziono repozytorium o podanej nazwie lub jego autora", result.getMessage());
+        Assertions.assertEquals("The repository with such provided author or name does not exist", result.getMessage());
         Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());
     }
 
@@ -171,7 +171,7 @@ public class GitHubRepositoryServiceTests {
         //when
         GitHubRepositoryNotFoundException result = Assertions.assertThrows(GitHubRepositoryNotFoundException.class, () -> gitHubRepositoryService.deleteLocalGitHubRepository(owner, repositoryName));
         //then
-        Assertions.assertEquals("Nie znaleziono repozytorium o podanej nazwie lub jego autora", result.getMessage());
+        Assertions.assertEquals("The repository with such provided author or name does not exist", result.getMessage());
         Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());
     }
 }
