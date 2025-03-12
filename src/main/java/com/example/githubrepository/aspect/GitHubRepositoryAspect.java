@@ -1,5 +1,6 @@
 package com.example.githubrepository.aspect;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
@@ -7,12 +8,12 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class GitHubRepositoryAspect {
-    @Pointcut("execution(* com.example.githubrepository.service..*(..))")
+    @Pointcut("execution(* com.example.githubrepository.service.*(..))")
     public void serviceMethods() {}
 
     @AfterReturning(pointcut = "serviceMethods()", returning = "returnValue")
-    public void afterReturningServiceMethods(Object returnValue) {
-        System.out.println("Return value was: " + returnValue);
+    public void afterReturningServiceMethods(JoinPoint joinPoint, Object returnValue) {
+        System.out.println("Return value for method was: " + returnValue);
     }
 
     @Before("serviceMethods()")
@@ -29,8 +30,8 @@ public class GitHubRepositoryAspect {
         return proceed;
     }
 
-    @Pointcut("execution(* com.example.githubrepository.controller..get*(..)) || " +
-            "execution(* com.example.githubrepository.controller..find*(..))")
+    @Pointcut("execution(* com.example.githubrepository.controller.get*(..)) || " +
+            "execution(* com.example.githubrepository.controller.find*(..))")
     public void controllerGetFindMethods() {}
 
     @Before("controllerGetFindMethods()")
@@ -38,7 +39,7 @@ public class GitHubRepositoryAspect {
         System.out.println("jestem metodą GET/FIND");
     }
 
-    @Pointcut("execution(* com.example.githubrepository.client..*(..))")
+    @Pointcut("execution(* com.example.githubrepository.client.GitHubRepositoryClient.*(..))")
     public void clientMethods() {}
 
     @Around("clientMethods()")
