@@ -12,15 +12,18 @@ public class CustomErrorDecoder implements ErrorDecoder {
 
     @Override
     public Exception decode(String methodKey, Response response) {
-        FeignException feignException = FeignException.errorStatus(methodKey, response);
-        RetryableException retryableException = new RetryableException(response.status(), feignException.getMessage(), response.request().httpMethod(), feignException,
-                1000L, response.request());
         return switch (response.status()) {
             case 404 ->
                     new GitHubRepositoryNotFoundException("The repository with such provided author or name does not exist", HttpStatus.NOT_FOUND);
             case 501, 502, 503, 504 ->
-                 retryableException;
+                 createRetryableException(methodKey,response);
             default -> errorDecoder.decode(methodKey, response);
         };
+    }
+
+    private RetryableException createRetryableException(String methodKey, Response response) {
+        FeignException feignException = FeignException.errorStatus(methodKey, response);
+        return new RetryableException(response.status(), feignException.getMessage(), response.request().httpMethod(), feignException,
+                1000L, response.request());
     }
 }
