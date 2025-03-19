@@ -10,18 +10,22 @@ import com.example.githubrepository.model.UpdateGitHubRepository;
 import com.example.githubrepository.repository.GitHubReposRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GitHubRepositoryService {
     private final GitHubRepositoryClient gitHubRepositoryClient;
     private final GitHubRepositoryMapper gitHubRepositoryMapper;
     private final GitHubReposRepository gitHubReposRepository;
 
     public GitHubRepositoryInfoDTO getGitHubRepository(String owner, String repositoryName) {
-        return gitHubRepositoryClient.getGitHubRepository(owner, repositoryName);
+        GitHubRepositoryInfoDTO gitHubRepository = gitHubRepositoryClient.getGitHubRepository(owner, repositoryName);
+        log.info("GitHubAPI returned {}", gitHubRepository);
+        return gitHubRepository;
     }
 
     public GitHubRepositoryDTO saveGitHubRepository(String owner, String repositoryName) {
@@ -30,6 +34,7 @@ public class GitHubRepositoryService {
         gitHubRepository.setOwner(owner);
         gitHubRepository.setRepositoryName(repositoryName);
         gitHubReposRepository.save(gitHubRepository);
+        log.info("GitHubRepositoryService saved {}", gitHubRepository);
         return gitHubRepositoryMapper.mapToGitHubRepositoryDTO(gitHubRepository);
     }
 
@@ -37,6 +42,7 @@ public class GitHubRepositoryService {
         GitHubRepository gitHubRepository = gitHubReposRepository.findGitHubRepositoryByOwnerAndRepositoryName(owner, repositoryName)
                 .orElseThrow(() -> new GitHubRepositoryNotFoundException("The repository with such provided author or name does not exist",
                         HttpStatus.NOT_FOUND));
+        log.info("GitHubRepositoryService got {} from data base", gitHubRepository);
         return gitHubRepositoryMapper.mapToGitHubRepositoryDTO(gitHubRepository);
     }
 
@@ -47,6 +53,7 @@ public class GitHubRepositoryService {
                 .orElseThrow(() -> new GitHubRepositoryNotFoundException("The repository with such provided author or name does not exist",
                         HttpStatus.NOT_FOUND));
         gitHubRepositoryByOwnerAndRepositoryName.updateData(updateGitHubRepository);
+        log.info("GitHubRepositoryService updated repository with path {}/{}. New data: {}", owner, repositoryName, updateGitHubRepository);
         return gitHubRepositoryMapper.mapToGitHubRepositoryDTO(gitHubRepositoryByOwnerAndRepositoryName);
     }
 
@@ -57,6 +64,7 @@ public class GitHubRepositoryService {
                 .orElseThrow(() -> new GitHubRepositoryNotFoundException("The repository with such provided author or name does not exist",
                         HttpStatus.NOT_FOUND));
         gitHubReposRepository.delete(gitHubRepositoryByOwnerAndRepositoryName);
+        log.info("GitHubRepositoryService deleted {} from data base", gitHubRepositoryByOwnerAndRepositoryName);
     }
 }
 

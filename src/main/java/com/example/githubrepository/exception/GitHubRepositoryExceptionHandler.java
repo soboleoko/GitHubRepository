@@ -1,5 +1,6 @@
 package com.example.githubrepository.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +15,19 @@ import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
+@Slf4j
 public class GitHubRepositoryExceptionHandler {
     @ExceptionHandler({RuntimeException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorMessage> handleDefaultException(RuntimeException exception) {
+        log.info("GitHubRepositoryExceptionHandler returned exception with unknown error");
         return new ResponseEntity<>(new ErrorMessage("Unknown message"), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({GitHubRepositoryNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorMessage> handleGitHubRepositoryNotFoundException(GitHubRepositoryNotFoundException exception) {
+        log.info("GitHubRepositoryExceptionHandler returned GitHubRepositoryNotFoundException");
         return ResponseEntity.status(exception.getHttpStatus()).body(new ErrorMessage(exception.getMessage()));
     }
 
@@ -33,13 +37,15 @@ public class GitHubRepositoryExceptionHandler {
         List<String> errors = exception.getBindingResult().getFieldErrors()
                 .stream().map(FieldError::getDefaultMessage)
                 .toList();
-        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(),HttpStatus.BAD_REQUEST);
+        log.info("GitHubRepositoryExceptionHandler returned list with validation errors");
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     private ValidationErrors getErrorsMap(List<String> errors) {
         Map<String, List<String>> errorResponse = new HashMap<>();
         ValidationErrors validationErrors = new ValidationErrors(errorResponse);
         errorResponse.put("errors", errors);
+        log.info("GitHubRepositoryExceptionHandler returned map with");
         return validationErrors;
     }
 }

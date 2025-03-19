@@ -13,7 +13,7 @@ public class GitHubRepositoryAspect {
 
     @AfterReturning(pointcut = "serviceMethods()", returning = "returnValue")
     public void afterReturningServiceMethods(JoinPoint joinPoint, Object returnValue) {
-        System.out.println("Return value for method was: " + returnValue);
+        System.out.println("Return value for method " + joinPoint.getSignature().getName() + " was: " + returnValue);
     }
 
     @Before("serviceMethods()")
@@ -50,5 +50,14 @@ public class GitHubRepositoryAspect {
         System.out.println("Time to proceed a request " + joinPoint.getSignature().getName() + " to GitHubRepositoryClient was:" +
                 finishTime + " ms");
         return proceed;
+    }
+
+    @Around("execution(* com.example.githubrepository.service.delete*(..))")
+    public void calculateDeleteMethodProcessing(ProceedingJoinPoint joinPoint) throws Throwable {
+        long startTime = System.currentTimeMillis();
+        joinPoint.proceed();
+        long finishTime = System.currentTimeMillis() - startTime;
+        System.out.println("Time to proceed a request " + joinPoint.getSignature().getName() + " to GitHubRepositoryClient was:" +
+                finishTime + " ms");
     }
 }
