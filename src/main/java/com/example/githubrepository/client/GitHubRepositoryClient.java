@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(value = "apigithub", url = "https://api.github.com", configuration = GitHubRepositoryClientConfiguration.class)
+@FeignClient(value = "apigithub", url = "${base.url.apigithub}", configuration = GitHubRepositoryClientConfiguration.class)
 public interface GitHubRepositoryClient {
     @GetMapping("/repos/{owner}/{repo}")
     GitHubRepositoryInfoDTO getGitHubRepository(@PathVariable String owner, @PathVariable("repo") String repositoryName);
